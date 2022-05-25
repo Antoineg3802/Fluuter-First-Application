@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'dart:async';
 void main() {
   runApp(const MyApp());
 }
@@ -22,9 +22,10 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.orange,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(
+        title: 'First Flutter App'),
     );
   }
 }
@@ -52,23 +53,15 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isAdding = true;
   String str = "";
 
+  void _resetCounter() {
+    setState(() {
+      _counter = 0;
+    });
+  }
+
   void _incrementCounter() {
     setState(() {
-      if (isAdding){
-        _counter++;
-      }else{
-        _counter--;
-      }
-
-      if (_counter >= 5) str = "Plus grand que 5";
-      else str ="";
-      if (_counter == 10) isAdding = false;
-      if (_counter == 0) isAdding = true;
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
+      _counter++;
     });
   }
 
@@ -107,13 +100,36 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Compteur:',
             ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
             str != " " ? Text(str) : Container(),
+            TextButton(
+              onPressed: () => showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Réinitialisation'),
+                  content: const Text('Vous êtes sur le point de réinitialiser votre compteur'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Non'),
+                    ),
+                    TextButton(
+                      onPressed: () => {
+                        Navigator.pop(context, 'OK'),
+                        _resetCounter(),
+                      },
+                      child: const Text('Oui'),
+                    ),
+                  ],
+                ),
+              ),
+              child: const Text('Réinitialiser'),
+            ),
           ],
         ),
       ),
@@ -123,5 +139,5 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(isAdding ? Icons.add : Icons.remove),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
-  }
+  } 
 }
